@@ -6,11 +6,12 @@ import { Modal, Button, Card, CardBody, CardHeader, Col, Container, Row, ModalHe
 import { Search } from "react-feather";
 import jsCookie from 'js-cookie';
 import axios from "axios";
+import { decode as base64_decode, encode as base64_encode } from 'base-64';
 
 const Customerview = () => {
 
 	const [open, setOpen] = useState(false);
-
+	let chartData = [];
 	const onOpenModal = () => {
 		setOpen(true);
 	};
@@ -25,38 +26,16 @@ const Customerview = () => {
 	const [find, setfind] = useState("0");
 	//	const [ninjas, setUsers1] = useState([]);
 	useEffect(() => {
-
-		jsCookie.set('pagename', 'admin');
-		jsCookie.set('pagehead', 'Customer');
-		const baseURL = "https://www.laabamone.com/Facepos/api.php?eventtype=Getprofile";
-		axios.get(baseURL).then((response) => {
-			console.log('response', response)
+		const loadUserslov = async () => {
+			const response = await axios.get("https://www.laabamone.com/Facepos/api.php?eventtype=Getprofilelist_admin");
+			//console.log('loc',response.data); 
 			setUsers(response.data);
-		});
-		/*  const loadUsers = async()=>{ 
-			  	
-					  const response =await fetch("https://jsonplaceholder.typicode.com/todos");
-					  const data = await response.json();						
-					  setUsers(data); 
-		 
- 
-		 }
-		 loadUsers();*/
-		/*fetch('https://www.laabamone.com/Facepos/api.php?eventtype=Getprofile')
-		.then(
-			(result) => {
-				console.log('yes1',result);
-			},
-			(error) => {
-				console.log('no');
-				console.log(error);				
-				
 
-			}
-		);*/
+		}
 
+		loadUserslov();
 	}, [])
-	console.log('ninjas', ninjas);
+	//console.log('ninjas', ninjas);
 	function setarrayvalues(getarr) {
 		setArrayy(getarr);
 	}
@@ -82,7 +61,10 @@ const Customerview = () => {
 		}
 
 	}
-
+	const Getprofileimg = (a) => {
+		const proimg = base64_decode('aHR0cHM6Ly9mYWNlcG9zdXBkYXRlZGJ1Y2tldG5ldzEyMzQ1NjE1Mzc1OC1kZXYuczMuZXUtd2VzdC0xLmFtYXpvbmF3cy5jb20vcHVibGljL3Byb2ZpbGUvTE9HSU1BR0UwLjMyMjE4NzA2MzM4OTY3NjM0LmpwZw==')
+		return proimg;
+	}
 	if (userarry != '') {
 
 
@@ -137,7 +119,7 @@ const Customerview = () => {
 										pagination={true}
 										className="-striped -highlight"
 										sortable={true}
-										page="admin_page"
+										page="customerlist"
 									/>
 
 
@@ -151,8 +133,8 @@ const Customerview = () => {
 		);
 	}
 
-	else {
-		console.log('ninjas2', ninjas);
+	else if (ninjas.length > 0) {
+
 		return (
 
 			<Fragment>
@@ -194,11 +176,13 @@ const Customerview = () => {
 										</Form>
 
 									</div>
+
+
 									{userarry == '' && find == '1' ?
 										<div className="row col-sm-12 "><h4 className="form-control text-center">No Data Found......</h4></div>
 
 										:
-										ninjas != '' ?
+										ninjas.length > 0 ?
 											<Datatable
 
 												myData={ninjas}
@@ -206,7 +190,7 @@ const Customerview = () => {
 												pagination={true}
 												className="-striped -highlight"
 												sortable={true}
-												page="admin_page"
+												page="customerlist"
 											/>
 											: <div className="row col-sm-12 "><h4 className="form-control text-center">Load......</h4></div>
 									}
@@ -221,6 +205,8 @@ const Customerview = () => {
 			</Fragment>
 		);
 	}
+	else
+		return (<>Loading..</>);
 
 };
 export default Customerview;

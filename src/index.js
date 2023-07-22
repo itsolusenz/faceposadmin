@@ -8,6 +8,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 // Components
 import Dashboard from "./components/dashboard";
 import Customer from "./components/accounts/customer/view";
+import CustomerView from "./components/accounts/customer/listview";
 // Products physical 
 
 import Sub_category from "./components/accounts/helper/view";
@@ -105,6 +106,10 @@ const Root = () => {
 						<Route
 							path={`${process.env.PUBLIC_URL}/customer`}
 							component={Customer}
+						/>
+						<Route
+							path={`${process.env.PUBLIC_URL}/customerview/:cusid`}
+							component={CustomerView}
 						/>
 
 						<Route
